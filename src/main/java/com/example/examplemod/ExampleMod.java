@@ -36,5 +36,6 @@ public class ExampleMod
     public void serverStarting(FMLServerStartingEvent event)
     {
         event.registerServerCommand(new KlanCommand());
+        event.registerServerCommand(new ChatCommand());
     }
 }

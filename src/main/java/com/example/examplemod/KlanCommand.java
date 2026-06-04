@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 
 public class KlanCommand extends CommandBase {
 
@@ -40,7 +41,9 @@ public class KlanCommand extends CommandBase {
             throw new WrongUsageException(getUsage(sender));
         }
 
-        if ("olu\u015Ftur".equalsIgnoreCase(args[0])) {
+        if ("help".equalsIgnoreCase(args[0])) {
+            sendHelp(player);
+        } else if ("olu\u015Ftur".equalsIgnoreCase(args[0])) {
             createClan(player, args);
         } else if ("davet".equalsIgnoreCase(args[0])) {
             invitePlayer(server, sender, player, args);
@@ -49,6 +52,29 @@ public class KlanCommand extends CommandBase {
         } else {
             throw new WrongUsageException(getUsage(sender));
         }
+    }
+
+    private void sendHelp(EntityPlayerMP player) {
+        sendColoredMessage(player, "--- Klan Sistemi Komutlar\u0131 ---", TextFormatting.GOLD);
+        sendCommandDescription(player, "/klan olu\u015Ftur [isim]", " - Yeni bir klan kurman\u0131z\u0131 sa\u011Flar.");
+        sendCommandDescription(player, "/klan davet [oyuncu]", " - Bir oyuncuyu klan\u0131n\u0131za davet eder.");
+        sendCommandDescription(player, "/klan da\u011F\u0131t", " - Sahibi oldu\u011Funuz klan\u0131 tamamen kapat\u0131r.");
+    }
+
+    private void sendColoredMessage(EntityPlayerMP player, String message, TextFormatting color) {
+        TextComponentString component = new TextComponentString(message);
+        component.getStyle().setColor(color);
+        player.sendMessage(component);
+    }
+
+    private void sendCommandDescription(EntityPlayerMP player, String command, String description) {
+        TextComponentString commandComponent = new TextComponentString(command);
+        TextComponentString descriptionComponent = new TextComponentString(description);
+
+        commandComponent.getStyle().setColor(TextFormatting.YELLOW);
+        descriptionComponent.getStyle().setColor(TextFormatting.GRAY);
+        commandComponent.appendSibling(descriptionComponent);
+        player.sendMessage(commandComponent);
     }
 
     private void createClan(EntityPlayerMP player, String[] args) throws CommandException {
@@ -118,7 +144,7 @@ public class KlanCommand extends CommandBase {
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
         if (args.length == 1) {
-            return getListOfStringsMatchingLastWord(args, "olu\u015Ftur", "davet", "da\u011F\u0131t");
+            return getListOfStringsMatchingLastWord(args, "help", "olu\u015Ftur", "davet", "da\u011F\u0131t");
         }
 
         if (args.length == 2 && "davet".equalsIgnoreCase(args[0])) {
