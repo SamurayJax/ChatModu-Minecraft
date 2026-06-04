@@ -28,7 +28,7 @@ public class ChatEventHandler {
 
             String clanMessage = chatMessage.substring(4);
             message = new TextComponentString(
-                    "[Klan] <" + sender.getName() + ">: " + clanMessage
+                    "[" + clanName + "] <" + sender.getName() + ">: " + clanMessage
             );
             message.getStyle().setColor(TextFormatting.GREEN);
 
