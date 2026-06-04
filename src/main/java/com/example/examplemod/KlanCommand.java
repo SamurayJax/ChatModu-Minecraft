@@ -1,0 +1,130 @@
+package com.example.examplemod;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+
+public class KlanCommand extends CommandBase {
+
+    @Override
+    public String getName() {
+        return "klan";
+    }
+
+    @Override
+    public String getUsage(ICommandSender sender) {
+        return "/klan olu\u015Ftur [isim] | /klan davet [oyuncu] | /klan da\u011F\u0131t";
+    }
+
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 0;
+    }
+
+    @Override
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+
+        if (args.length == 0) {
+            throw new WrongUsageException(getUsage(sender));
+        }
+
+        if ("olu\u015Ftur".equalsIgnoreCase(args[0])) {
+            createClan(player, args);
+        } else if ("davet".equalsIgnoreCase(args[0])) {
+            invitePlayer(server, sender, player, args);
+        } else if ("da\u011F\u0131t".equalsIgnoreCase(args[0])) {
+            dissolveClan(player);
+        } else {
+            throw new WrongUsageException(getUsage(sender));
+        }
+    }
+
+    private void createClan(EntityPlayerMP player, String[] args) throws CommandException {
+        if (args.length < 2) {
+            throw new WrongUsageException("/klan olu\u015Ftur [isim]");
+        }
+
+        ClanManager clanManager = ClanManager.getInstance();
+        UUID playerId = player.getUniqueID();
+
+        if (clanManager.getClanName(playerId) != null) {
+            player.sendMessage(new TextComponentString("Zaten bir klandas\u0131n."));
+            return;
+        }
+
+        String clanName = args[1];
+
+        if (clanManager.createClan(clanName, playerId)) {
+            player.sendMessage(new TextComponentString("Klan olu\u015Fturuldu: " + clanName));
+        } else {
+            player.sendMessage(new TextComponentString("Bu isimde bir klan zaten var."));
+        }
+    }
+
+    private void invitePlayer(MinecraftServer server, ICommandSender sender, EntityPlayerMP player, String[] args) throws CommandException {
+        if (args.length < 2) {
+            throw new WrongUsageException("/klan davet [oyuncu]");
+        }
+
+        ClanManager clanManager = ClanManager.getInstance();
+        UUID playerId = player.getUniqueID();
+        String clanName = clanManager.getClanName(playerId);
+
+        if (clanName == null) {
+            player.sendMessage(new TextComponentString("Davet gondermek icin once bir klana katilmalisin."));
+            return;
+        }
+
+        EntityPlayerMP target = getPlayer(server, sender, args[1]);
+        UUID targetId = target.getUniqueID();
+
+        if (playerId.equals(targetId)) {
+            player.sendMessage(new TextComponentString("Kendini klana davet edemezsin."));
+            return;
+        }
+
+        if (clanManager.getClanName(targetId) != null) {
+            player.sendMessage(new TextComponentString("Bu oyuncu zaten bir klanda."));
+            return;
+        }
+
+        clanManager.addPendingInvitation(playerId, targetId);
+        player.sendMessage(new TextComponentString(target.getName() + " oyuncusuna klan daveti gonderildi."));
+        target.sendMessage(new TextComponentString(player.getName() + " seni " + clanName + " klanina davet etti."));
+    }
+
+    private void dissolveClan(EntityPlayerMP player) {
+        ClanManager clanManager = ClanManager.getInstance();
+
+        if (clanManager.dissolveClan(player.getUniqueID())) {
+            player.sendMessage(new TextComponentString("Klan da\u011F\u0131t\u0131ld\u0131."));
+        } else {
+            player.sendMessage(new TextComponentString("Da\u011F\u0131tacak bir klan\u0131n yok."));
+        }
+    }
+
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+        if (args.length == 1) {
+            return getListOfStringsMatchingLastWord(args, "olu\u015Ftur", "davet", "da\u011F\u0131t");
+        }
+
+        if (args.length == 2 && "davet".equalsIgnoreCase(args[0])) {
+            return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
+        }
+
+        return Collections.emptyList();
+    }
+}
