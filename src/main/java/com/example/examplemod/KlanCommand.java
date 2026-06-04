@@ -64,6 +64,7 @@ public class KlanCommand extends CommandBase {
         sendCommandDescription(player, "/klan olu\u015Ftur [isim]", " - Yeni bir klan kurman\u0131z\u0131 sa\u011Flar.");
         sendCommandDescription(player, "/klan davet [oyuncu]", " - Bir oyuncuyu klan\u0131n\u0131za davet eder.");
         sendCommandDescription(player, "/klan da\u011F\u0131t", " - Sahibi oldu\u011Funuz klan\u0131 tamamen kapat\u0131r.");
+        sendCommandDescription(player, "/klan help", " - Klan komutlar\u0131n\u0131 g\u00F6sterir.");
     }
 
     private void sendColoredMessage(EntityPlayerMP player, String message, TextFormatting color) {

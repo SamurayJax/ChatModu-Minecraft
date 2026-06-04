@@ -49,14 +49,26 @@ public class ChatCommand extends CommandBase {
     private void sendHelp(ICommandSender sender) {
         sendColoredMessage(sender, "--- Chat Sistemi Kurallar\u0131 ---", TextFormatting.GOLD);
         sendColoredMessage(sender, "\u2022 Normal Chat: Mesaj\u0131n\u0131z\u0131 sadece 50 blok yak\u0131n\u0131n\u0131zdaki oyuncular duyabilir.", TextFormatting.GRAY);
-        sendColoredMessage(sender, "\u2022 F\u0131s\u0131lt\u0131 (/S [mesaj]): 10 blok yak\u0131ndakilere gizlice f\u0131s\u0131ldars\u0131n\u0131z ve sunucu loglar\u0131na kaydedilmez.", TextFormatting.GRAY);
-        sendColoredMessage(sender, "\u2022 Klan Chati (GUI): Sol sekmelerden ge\u00E7i\u015F yapabilirsiniz. S\u0131n\u0131rs\u0131z mesafedeki t\u00FCm klan \u00FCyeleri ye\u015Fil renkte g\u00F6r\u00FCr.", TextFormatting.GRAY);
+        sendCommandDescription(sender, "/s [mesaj]", " - 10 blok yak\u0131ndakilere gizlice f\u0131s\u0131ldars\u0131n\u0131z.");
+        sendCommandDescription(sender, "/kchat [mesaj]", " - Klan \u00FCyelerinize mesafe s\u0131n\u0131r\u0131 olmadan ye\u015Fil mesaj g\u00F6nderir.");
+        sendColoredMessage(sender, "\u2022 Klan Chati (GUI): Sol sekmelerden ge\u00E7i\u015F yapabilirsiniz; GUI bu komutu sizin i\u00E7in otomatik kullan\u0131r.", TextFormatting.GRAY);
+        sendCommandDescription(sender, "/chat help", " - Chat yard\u0131m men\u00FCs\u00FCn\u00FC g\u00F6sterir.");
     }
 
     private void sendColoredMessage(ICommandSender sender, String message, TextFormatting color) {
         TextComponentString component = new TextComponentString(message);
         component.getStyle().setColor(color);
         sender.sendMessage(component);
+    }
+
+    private void sendCommandDescription(ICommandSender sender, String command, String description) {
+        TextComponentString commandComponent = new TextComponentString(command);
+        TextComponentString descriptionComponent = new TextComponentString(description);
+
+        commandComponent.getStyle().setColor(TextFormatting.YELLOW);
+        descriptionComponent.getStyle().setColor(TextFormatting.GRAY);
+        commandComponent.appendSibling(descriptionComponent);
+        sender.sendMessage(commandComponent);
     }
 
     @Override
