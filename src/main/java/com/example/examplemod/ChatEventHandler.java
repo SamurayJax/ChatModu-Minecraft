@@ -43,7 +43,7 @@ public class ChatEventHandler {
             return;
         }
 
-        if (chatMessage.startsWith("/S ")) {
+        if (chatMessage.toLowerCase().startsWith("/s ")) {
             String whisperMessage = chatMessage.substring(3);
             distanceLimitSq = 100.0D;
             message = new TextComponentString(
