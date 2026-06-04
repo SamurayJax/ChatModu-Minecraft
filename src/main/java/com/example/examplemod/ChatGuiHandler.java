@@ -51,7 +51,7 @@ public class ChatGuiHandler {
     @SubscribeEvent
     public static void onClientChat(ClientChatEvent event) {
         if ("CLAN".equals(currentChannel) && !event.getMessage().startsWith("/")) {
-            event.setMessage("#K# " + event.getMessage());
+            event.setMessage("/kchat " + event.getMessage());
         }
     }
 

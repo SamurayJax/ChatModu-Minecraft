@@ -37,5 +37,7 @@ public class ExampleMod
     {
         event.registerServerCommand(new KlanCommand());
         event.registerServerCommand(new ChatCommand());
+        event.registerServerCommand(new WhisperCommand());
+        event.registerServerCommand(new ClanChatCommand());
     }
 }

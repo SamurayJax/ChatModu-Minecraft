@@ -1,11 +1,10 @@
 package com.example.examplemod;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.event.ServerChatEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ChatEventHandler {
 
@@ -15,49 +14,31 @@ public class ChatEventHandler {
 
         EntityPlayerMP sender = event.getPlayer();
         String chatMessage = event.getMessage();
-        double distanceLimitSq = 2500.0D;
-        TextComponentString message;
 
         if (chatMessage.startsWith("#K# ")) {
-            String clanName = ClanManager.getInstance().getClanName(sender.getUniqueID());
-
-            if (clanName == null) {
-                sender.sendMessage(new TextComponentString("Bir klanda değilsin!"));
-                return;
-            }
-
-            String clanMessage = chatMessage.substring(4);
-            message = new TextComponentString(
-                    "[" + clanName + "] <" + sender.getName() + ">: " + clanMessage
+            ChatDeliveryHelper.sendClanMessage(
+                    FMLCommonHandler.instance().getMinecraftServerInstance(),
+                    sender,
+                    chatMessage.substring(4)
             );
-            message.getStyle().setColor(TextFormatting.GREEN);
-
-            for (EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
-                String playerClanName = ClanManager.getInstance().getClanName(player.getUniqueID());
-
-                if (clanName.equals(playerClanName)) {
-                    player.sendMessage(message);
-                }
-            }
-
             return;
         }
 
         if (chatMessage.toLowerCase().startsWith("/s ")) {
-            String whisperMessage = chatMessage.substring(3);
-            distanceLimitSq = 100.0D;
-            message = new TextComponentString(
-                    "[Sessiz] <" + sender.getName() + ">: " + whisperMessage
+            ChatDeliveryHelper.sendWhisper(
+                    FMLCommonHandler.instance().getMinecraftServerInstance(),
+                    sender,
+                    chatMessage.substring(3)
             );
-            message.getStyle().setColor(TextFormatting.DARK_GRAY);
-        } else {
-            message = new TextComponentString(
-                    "<" + sender.getName() + "> " + chatMessage
-            );
+            return;
         }
 
+        TextComponentString message = new TextComponentString(
+                "<" + sender.getName() + "> " + chatMessage
+        );
+
         for (EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
-            if (player.dimension == sender.dimension && player.getDistanceSq(sender) <= distanceLimitSq) {
+            if (player.dimension == sender.dimension && player.getDistanceSq(sender) <= 2500.0D) {
                 player.sendMessage(message);
             }
         }
