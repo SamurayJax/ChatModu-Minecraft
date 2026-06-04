@@ -18,6 +18,31 @@ public class ChatEventHandler {
         double distanceLimitSq = 2500.0D;
         TextComponentString message;
 
+        if (chatMessage.startsWith("#K# ")) {
+            String clanName = ClanManager.getInstance().getClanName(sender.getUniqueID());
+
+            if (clanName == null) {
+                sender.sendMessage(new TextComponentString("Bir klanda değilsin!"));
+                return;
+            }
+
+            String clanMessage = chatMessage.substring(4);
+            message = new TextComponentString(
+                    "[Klan] <" + sender.getName() + ">: " + clanMessage
+            );
+            message.getStyle().setColor(TextFormatting.GREEN);
+
+            for (EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+                String playerClanName = ClanManager.getInstance().getClanName(player.getUniqueID());
+
+                if (clanName.equals(playerClanName)) {
+                    player.sendMessage(message);
+                }
+            }
+
+            return;
+        }
+
         if (chatMessage.startsWith("/S ")) {
             String whisperMessage = chatMessage.substring(3);
             distanceLimitSq = 100.0D;
