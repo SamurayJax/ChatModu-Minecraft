@@ -15,15 +15,6 @@ public class ChatEventHandler {
         EntityPlayerMP sender = event.getPlayer();
         String chatMessage = event.getMessage();
 
-        if (chatMessage.startsWith("#K# ")) {
-            ChatDeliveryHelper.sendClanMessage(
-                    FMLCommonHandler.instance().getMinecraftServerInstance(),
-                    sender,
-                    chatMessage.substring(4)
-            );
-            return;
-        }
-
         if (chatMessage.toLowerCase().startsWith("/s ")) {
             ChatDeliveryHelper.sendWhisper(
                     FMLCommonHandler.instance().getMinecraftServerInstance(),

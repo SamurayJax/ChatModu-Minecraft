@@ -35,9 +35,7 @@ public class ExampleMod
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
-        event.registerServerCommand(new KlanCommand());
         event.registerServerCommand(new ChatCommand());
         event.registerServerCommand(new WhisperCommand());
-        event.registerServerCommand(new ClanChatCommand());
     }
 }

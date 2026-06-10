@@ -21,26 +21,4 @@ public class ChatDeliveryHelper {
             }
         }
     }
-
-    public static void sendClanMessage(MinecraftServer server, EntityPlayerMP sender, String clanMessage) {
-        String clanName = ClanManager.getInstance().getClanName(sender.getUniqueID());
-
-        if (clanName == null) {
-            sender.sendMessage(new TextComponentString("Bir klanda degilsin!"));
-            return;
-        }
-
-        TextComponentString message = new TextComponentString(
-                "[" + clanName + "] <" + sender.getName() + ">: " + clanMessage
-        );
-        message.getStyle().setColor(TextFormatting.GREEN);
-
-        for (EntityPlayerMP player : server.getPlayerList().getPlayers()) {
-            String playerClanName = ClanManager.getInstance().getClanName(player.getUniqueID());
-
-            if (clanName.equals(playerClanName)) {
-                player.sendMessage(message);
-            }
-        }
-    }
 }

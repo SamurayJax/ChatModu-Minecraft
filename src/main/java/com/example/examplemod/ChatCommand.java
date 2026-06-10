@@ -50,8 +50,6 @@ public class ChatCommand extends CommandBase {
         sendColoredMessage(sender, "--- Chat Sistemi Kurallar\u0131 ---", TextFormatting.GOLD);
         sendColoredMessage(sender, "\u2022 Normal Chat: Mesaj\u0131n\u0131z\u0131 sadece 50 blok yak\u0131n\u0131n\u0131zdaki oyuncular duyabilir.", TextFormatting.GRAY);
         sendCommandDescription(sender, "/s [mesaj]", " - 10 blok yak\u0131ndakilere gizlice f\u0131s\u0131ldars\u0131n\u0131z.");
-        sendCommandDescription(sender, "/kchat [mesaj]", " - Klan \u00FCyelerinize mesafe s\u0131n\u0131r\u0131 olmadan ye\u015Fil mesaj g\u00F6nderir.");
-        sendColoredMessage(sender, "\u2022 Klan Chati (GUI): Sol sekmelerden ge\u00E7i\u015F yapabilirsiniz; GUI bu komutu sizin i\u00E7in otomatik kullan\u0131r.", TextFormatting.GRAY);
         sendCommandDescription(sender, "/chat help", " - Chat yard\u0131m men\u00FCs\u00FCn\u00FC g\u00F6sterir.");
     }
 
